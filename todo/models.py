@@ -9,4 +9,3 @@ class Item(models.Model):
     # over-rides string from django
     def __str__(self):
         return self.name
-
