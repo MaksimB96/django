@@ -22,24 +22,26 @@ class TestViews(TestCase):
 
     def test_can_add_item(self):
         response = self.client.post('/add', {'name': 'Test AAdded Item'})
-        self.assertRedirects(reponse, '/')
+        self.assertRedirects(response, '/')
 
     def test_can_delete_item(self):
         item = Item.objects.create(name='Test Todo Item')
         response = self.client.get(f'/delete/{item.id}')
-        self.assertRedirects(reponse, '/')
-        existing_items =Item.objects.filter(id=itme.id)
+        self.assertRedirects(response, '/')
+        existing_items =Item.objects.filter(id=item.id)
         self.assertEqual(len(existing_items), 0)
 
     def test_can_toggle_item(self):
         item = Item.objects.create(name='Test Todo Item', done=True)
         response = self.client.get(f'/toggle/{item.id}')
-        self.assertRedirects(reponse, '/')
+        self.assertRedirects(response, '/')
         updated_item = Item.objects.get(id=item.id)
         self.assertFalse(updated_item.done)
 
     def test_can_edit_item(self):
         item = Item.objects.create(name='Test Todo Item')
-        response = self.client.post(f'/edit/{item.id}', {'name': 'Updated Name'})
+        response = self.client.post(f'/edit/{item.id}',
+                                    {'name': 'Updated Name'})
+        self.assertRedirects(response, '/')
         updated_item = Item.objects.get(id=item.id)
-        self.asertEqual(updated_item.name, 'Updated Name')
+        self.assertEqual(updated_item.name, 'Updated Name')
